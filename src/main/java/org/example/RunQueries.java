@@ -75,6 +75,6 @@ public class RunQueries {
             }
         }
 
-        System.out.println("✅ " + tag + " results → " + outputFile.toAbsolutePath());
+        System.out.println(tag + " results → " + outputFile.toAbsolutePath());
     }
 }
