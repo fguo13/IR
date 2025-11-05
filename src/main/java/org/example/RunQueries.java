@@ -22,7 +22,6 @@ import java.util.Locale;
 public class RunQueries {
 
     public static void main(String[] args) throws Exception {
-        // arg0: analyser name -> english (default) | standard | custom
         String mode = args.length > 0 ? args[0].toLowerCase() : "english";
         Path indexDir = Paths.get(
                 mode.equals("standard") ? "index-standard" :
@@ -32,7 +31,6 @@ public class RunQueries {
         Path qryFile = Paths.get("cran/cran.qry");
 
         try (DirectoryReader reader = DirectoryReader.open(FSDirectory.open(indexDir))) {
-            // tag includes analyser + similarity so files are self-describing
             runWith(reader, "VSM-"  + mode, new ClassicSimilarity(), qryFile,
                     Paths.get("runs/vsm-"  + mode + ".run"));
             runWith(reader, "BM25-" + mode, new BM25Similarity(1.2f, 0.75f), qryFile,
@@ -56,7 +54,7 @@ public class RunQueries {
         IndexSearcher searcher = new IndexSearcher(reader);
         searcher.setSimilarity(similarity);
 
-        Analyzer analyzer = new EnglishAnalyzer(); // only used to parse queries
+        Analyzer analyzer = new EnglishAnalyzer();
         QueryParser parser = new QueryParser("contents", analyzer);
 
         List<CranfieldParser.Query> queries = CranfieldParser.parseQueries(qryFile);
@@ -68,7 +66,7 @@ public class RunQueries {
 
                 int rank = 1;
                 for (ScoreDoc sd : results.scoreDocs) {
-                    Document d = searcher.storedFields().document(sd.doc); // Lucene 10.x way
+                    Document d = searcher.storedFields().document(sd.doc);
                     String docno = d.get("docno");
                     writer.printf(Locale.US, "%s 0 %s %d %.6f %s%n",
                             q.id, docno, rank, sd.score, tag);

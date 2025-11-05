@@ -16,13 +16,13 @@ import java.nio.file.Paths;
 
 public class Search {
     public static void main(String[] args) throws Exception {
-        Path indexDir = Paths.get("index-english"); // whichever index you prefer
+        Path indexDir = Paths.get("index-english");
         Analyzer analyzer = new EnglishAnalyzer();
 
         DirectoryReader reader = DirectoryReader.open(FSDirectory.open(indexDir));
         IndexSearcher searcher = new IndexSearcher(reader);
 
-        // Choose a model
+        // Choose model
         Similarity similarity;
         System.out.println("Select model: 1=VSM, 2=BM25, 3=LMJM");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

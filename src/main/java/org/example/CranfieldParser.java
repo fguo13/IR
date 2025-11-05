@@ -31,8 +31,6 @@ public class CranfieldParser {
             this.grade = grade;
         }
     }
-
-    // ✅ Parse documents (.I .T .A .B .W)
     public static List<Doc> parseDocs(Path p) throws Exception {
         String all = Files.readString(p);
         List<Doc> docs = new ArrayList<>();
@@ -42,7 +40,7 @@ public class CranfieldParser {
             if (block.isEmpty()) continue;
             String[] lines = block.split("\n");
             String raw = lines[0].trim();
-            String id = raw.replaceFirst("^\\.I\\s*", ""); // remove ".I "
+            String id = raw.replaceFirst("^\\.I\\s*", "");
             String title = extract(block, "\\.T\\s*([\\s\\S]*?)(?=\\n\\.[ABW]|$)");
             String auth  = extract(block, "\\.A\\s*([\\s\\S]*?)(?=\\n\\.[TBW]|$)");
             String bib   = extract(block, "\\.B\\s*([\\s\\S]*?)(?=\\n\\.[TAW]|$)");
@@ -52,7 +50,6 @@ public class CranfieldParser {
         return docs;
     }
 
-    // ✅ Parse queries with automatic renumbering (1..225)
     public static List<Query> parseQueries(Path p) throws Exception {
         String all = Files.readString(p);
         List<Query> qs = new ArrayList<>();
@@ -67,7 +64,6 @@ public class CranfieldParser {
         return qs;
     }
 
-    // ✅ Parse qrels (handles both 3-col and 4-col formats)
     public static List<Qrel> parseQrels(Path p) throws Exception {
         List<Qrel> res = new ArrayList<>();
         for (String line : Files.readAllLines(p)) {
@@ -76,11 +72,11 @@ public class CranfieldParser {
             String[] t = line.split("\\s+");
             String qid, doc;
             int grade;
-            if (t.length >= 4) { // TREC format: qid 0 docid grade
+            if (t.length >= 4) { // TREC: qid 0 docid grade
                 qid = t[0];
                 doc = t[2];
                 grade = Integer.parseInt(t[3]);
-            } else { // older format: qid docid grade
+            } else { // qid docid grade
                 qid = t[0];
                 doc = t[1];
                 grade = Integer.parseInt(t[2]);

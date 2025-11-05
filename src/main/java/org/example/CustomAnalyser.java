@@ -12,13 +12,10 @@ import java.util.Arrays;
 public class CustomAnalyser extends Analyzer {
     @Override
     protected TokenStreamComponents createComponents(String fieldName) {
-        // Tokenizer: splits text into individual terms
         Tokenizer source = new StandardTokenizer();
-
-        // Build the token processing pipeline
-        TokenStream filter = new LowerCaseFilter(source);           // lowercase
-        filter = new StopFilter(filter, EnglishAnalyzer.getDefaultStopSet());                // remove stop words
-        filter = new PorterStemFilter(filter);                      // stemming
+        TokenStream filter = new LowerCaseFilter(source);
+        filter = new StopFilter(filter, EnglishAnalyzer.getDefaultStopSet());
+        filter = new PorterStemFilter(filter);
 
         return new TokenStreamComponents(source, filter);
     }

@@ -14,7 +14,7 @@ public class Indexer {
     public static void main(String[] args) throws Exception {
         Path docsPath = Paths.get("cran/cran.all.1400");
 
-        // Choose analyzer via command-line arg or default to EnglishAnalyzer
+        // Choose analyser
         String mode = args.length > 0 ? args[0].toLowerCase() : "english";
         Analyzer analyzer;
         Path indexDir;
@@ -46,6 +46,6 @@ public class Indexer {
             w.commit();
         }
 
-        System.out.println("✅ Indexed " + docs.size() + " docs with " + mode + " analyzer into " + indexDir);
+        System.out.println("Indexed " + docs.size() + " docs with " + mode + " analyser into " + indexDir);
     }
 }
