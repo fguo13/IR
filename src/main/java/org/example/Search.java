@@ -18,11 +18,11 @@ public class Search {
     public static void main(String[] args) throws Exception {
         Path indexDir = Paths.get("index-english");
         Analyzer analyzer = new EnglishAnalyzer();
-
+        // checks index
         DirectoryReader reader = DirectoryReader.open(FSDirectory.open(indexDir));
         IndexSearcher searcher = new IndexSearcher(reader);
 
-        // Choose model
+        // choose model
         Similarity similarity;
         System.out.println("Select model: 1=VSM, 2=BM25, 3=LMJM");
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -45,7 +45,7 @@ public class Search {
                 System.out.println("Invalid, using BM25");
                 similarity = new BM25Similarity();
         }
-        searcher.setSimilarity(similarity);
+        searcher.setSimilarity(similarity); // use selected model for search
 
         QueryParser parser = new QueryParser("contents", analyzer);
 
@@ -58,8 +58,8 @@ public class Search {
             TopDocs results = searcher.search(query, 5);
 
             System.out.println("\nTop results for: \"" + queryStr + "\"\n");
-            for (ScoreDoc sd : results.scoreDocs) {
-                Document doc = searcher.storedFields().document(sd.doc);
+            for (ScoreDoc sd : results.scoreDocs) { // go through scored docs
+                Document doc = searcher.storedFields().document(sd.doc); // load the fields
                 String title = doc.get("title");
                 String id = doc.get("docno");
                 System.out.printf("DocID=%s | Score=%.4f | %s%n", id, sd.score,

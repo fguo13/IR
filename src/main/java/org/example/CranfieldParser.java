@@ -35,17 +35,17 @@ public class CranfieldParser {
         String all = Files.readString(p);
         List<Doc> docs = new ArrayList<>();
 
-        for (String block : all.split("\n\\.I\\s+")) {
+        for (String block : all.split("\n\\.I\\s+")) { // split on .I marker
             block = block.trim();
             if (block.isEmpty()) continue;
             String[] lines = block.split("\n");
             String raw = lines[0].trim();
-            String id = raw.replaceFirst("^\\.I\\s*", "");
+            String id = raw.replaceFirst("^\\.I\\s*", ""); // get id
             String title = extract(block, "\\.T\\s*([\\s\\S]*?)(?=\\n\\.[ABW]|$)");
             String auth  = extract(block, "\\.A\\s*([\\s\\S]*?)(?=\\n\\.[TBW]|$)");
             String bib   = extract(block, "\\.B\\s*([\\s\\S]*?)(?=\\n\\.[TAW]|$)");
             String text  = extract(block, "\\.W\\s*([\\s\\S]*?)$");
-            docs.add(new Doc(id, nz(title), nz(auth), nz(bib), nz(text)));
+            docs.add(new Doc(id, nz(title), nz(auth), nz(bib), nz(text))); // normalise blanks
         }
         return docs;
     }
@@ -58,7 +58,7 @@ public class CranfieldParser {
             block = block.trim();
             if (block.isEmpty()) continue;
             String text = extract(block, "\\.W\\s*([\\s\\S]*?)$");
-            int newId = qs.size() + 1;
+            int newId = qs.size() + 1; // give new id
             qs.add(new Query(String.valueOf(newId), nz(text)));
         }
         return qs;
@@ -87,8 +87,8 @@ public class CranfieldParser {
     }
 
     private static String extract(String s, String regex) {
-        Matcher m = Pattern.compile(regex, Pattern.DOTALL).matcher(s);
-        return m.find() ? m.group(1).trim() : "";
+        Matcher m = Pattern.compile(regex, Pattern.DOTALL).matcher(s); // only "." matches new lines
+        return m.find() ? m.group(1).trim() : ""; // return trimmed text or ""
     }
 
     private static String nz(String s) { return s == null ? "" : s.trim(); }

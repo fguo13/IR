@@ -50,10 +50,11 @@ public class RunQueries {
     private static void runWith(DirectoryReader reader, String tag, Similarity similarity,
                                 Path qryFile, Path outputFile) throws Exception {
 
-        Files.createDirectories(outputFile.getParent());
+        Files.createDirectories(outputFile.getParent()); // ensures /run exists
         IndexSearcher searcher = new IndexSearcher(reader);
         searcher.setSimilarity(similarity);
 
+        //parse queries
         Analyzer analyzer = new EnglishAnalyzer();
         QueryParser parser = new QueryParser("contents", analyzer);
 
@@ -61,7 +62,7 @@ public class RunQueries {
 
         try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(outputFile))) {
             for (CranfieldParser.Query q : queries) {
-                Query luceneQuery = parser.parse(QueryParser.escape(q.text));
+                Query luceneQuery = parser.parse(QueryParser.escape(q.text)); // no special characters
                 TopDocs results = searcher.search(luceneQuery, 1000);
 
                 int rank = 1;
